@@ -1,0 +1,64 @@
+app:
+  node_env: NODE_ENV
+  name: APP_NAME
+  port: APP_PORT
+  prefix: APP_PREFIX
+  url: APP_URL
+  version: VERSION
+  client_jwt_access_token_secret: CLIENT_JWT_ACCESS_TOKEN_SECRET
+  client_jwt_access_token_expiration_time: CLIENT_JWT_ACCESS_TOKEN_EXPIRATION_TIME
+  client_jwt_refresh_token_secret: CLIENT_JWT_REFRESH_TOKEN_SECRET
+  client_jwt_refresh_token_expiration_time: CLIENT_JWT_REFRESH_TOKEN_EXPIRATION_TIME
+  user_jwt_access_token_secret: USER_JWT_ACCESS_TOKEN_SECRET
+  user_jwt_access_token_expiration_time: USER_JWT_ACCESS_TOKEN_EXPIRATION_TIME
+  user_jwt_refresh_token_secret: USER_JWT_REFRESH_TOKEN_SECRET
+  user_jwt_refresh_token_expiration_time: USER_JWT_REFRESH_TOKEN_EXPIRATION_TIME
+
+redis:
+  host: REDIS_HOST
+  port: REDIS_PORT
+
+kafka:
+  brokers: KAFKA_BROKERS
+
+sentry_dns: SENTRY_DNS
+
+mail:
+  host: MAIL_HOST
+  port: MAIL_PORT
+  account: MAIL_ACCOUNT
+  password: MAIL_PASSWORD
+  from: MAIL_FROM
+  service: MAIL_SERVICE
+  enable: MAIL_ENABLE
+
+
+linode_config:
+  upload_path: LINODE_UPLOAD_PATH
+  access_key_id: LINODE_ACCESS_KEY_ID
+  secret_access_key: LINODE_SECRET_ACCESS_KEY
+  bucket_name: LINODE_BUCKET_NAME
+  region: LINODE_REGION
+  domain: LINODE_DOMAIN
+  upload_limit: UPLOAD_LIMIT 
+  base_url: LINODE_BASE_URL
+
+mongodb:
+  uri: MONGO_URI
+
+facebook:
+  graph_api: FACEBOOK_GRAPH_API
+
+google:
+  base_api: GOOGLE_BASE_API
+
+server: 
+  web_url: WEB_URL
+
+sign_up_expiration_time: CLIENT_SIGN_UP_EXPIRATION_TIME
+forgot_password_expiration_time: CLIENT_FORGOT_PASSWORD_EXPIRATION_TIME
+
+stripe: 
+   api_key: API_KEY
+   success_url: SUCCESS_URL
+   cancel_url: CANCEL_URL
