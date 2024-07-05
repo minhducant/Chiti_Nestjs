@@ -12,8 +12,8 @@ export class Notification extends Document {
   @Prop({ type: [String], default: [], required: false })
   notification_token: string[];
 
-  @Prop({ type: Map, of: String, default: {}, required: false })
-  data: Record<string, string>;
+  @Prop({ type: MongooseSchema.Types.Mixed, default: {} })
+  data: Record<string, any>;
 
   @Prop({ type: String, default: '', required: true })
   title: string;

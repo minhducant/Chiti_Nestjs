@@ -22,7 +22,7 @@ export class AuthController {
     private readonly userService: UserService,
   ) {}
 
-  @Get('current_user')
+  @Get('current-user')
   @UserAuth()
   @ApiBearerAuth()
   @ApiOperation({ summary: '[Auth] Get User Information' })
@@ -30,7 +30,7 @@ export class AuthController {
     return this.userService.findById(userId);
   }
 
-  @Post('login_apple')
+  @Post('login-apple')
   @ApiOperation({ summary: '[Auth] Login with Apple' })
   async logInApple(
     @Body() loginInstagramDto: LoginGoogleDto,
@@ -38,7 +38,7 @@ export class AuthController {
     return this.authService.logInGoogle(loginInstagramDto);
   }
 
-  @Post('login_google')
+  @Post('login-google')
   @ApiOperation({ summary: '[Auth] Login with Google' })
   async logInGoogle(
     @Body() loginInstagramDto: LoginGoogleDto,
@@ -46,7 +46,7 @@ export class AuthController {
     return this.authService.logInGoogle(loginInstagramDto);
   }
 
-  @Post('login_facebook')
+  @Post('login-facebook')
   @ApiOperation({ summary: '[Auth] Login with Facebook' })
   async loginFacebook(
     @Body() loginFacebookDto: LoginFacebookDto,
@@ -54,7 +54,7 @@ export class AuthController {
     return this.authService.loginFacebook(loginFacebookDto);
   }
 
-  @Post('refresh_access_token')
+  @Post('refresh-access-token')
   @ApiOperation({ summary: '[Auth] Get new Access Token' })
   @UseGuards(UserRtGuards)
   async userRefreshAccessToken(

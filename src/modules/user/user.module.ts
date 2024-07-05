@@ -7,10 +7,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserController } from './user.controller';
 import { redisConfig } from 'src/configs/redis.config';
 import { User, UserSchema } from './schemas/user.schema';
+import { Friend, FriendSchema } from '../friend/schemas/friend.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: Friend.name, schema: FriendSchema }]),
     CacheModule.register({
       store: redisStore,
       ...redisConfig,

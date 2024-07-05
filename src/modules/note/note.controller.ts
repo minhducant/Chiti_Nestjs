@@ -76,7 +76,7 @@ export class NoteController {
     return this.noteService.splitExpenses(id);
   }
 
-  @Patch('/add_expense')
+  @Patch('/add-expense')
   @ApiBearerAuth()
   @ApiOperation({
     summary: '[Note] Add Expense',
@@ -85,7 +85,7 @@ export class NoteController {
     await this.noteService.addExpense(body);
   }
 
-  @Patch('/edit_expense')
+  @Patch('/edit-expense')
   @ApiBearerAuth()
   @ApiOperation({
     summary: '[Note] Edit Expense',
@@ -94,7 +94,7 @@ export class NoteController {
     await this.noteService.editExpense(body);
   }
 
-  @Patch('/change_member')
+  @Patch('/change-member')
   @ApiBearerAuth()
   @ApiOperation({
     summary: '[Note] Change member',
@@ -103,7 +103,7 @@ export class NoteController {
     await this.noteService.changeMember(body);
   }
 
-  @Patch('/change_status')
+  @Patch('/change-status')
   @ApiBearerAuth()
   @ApiOperation({
     summary: '[Note] Change status note',

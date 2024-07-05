@@ -1,6 +1,13 @@
-import { DecodedIdToken } from 'firebase-admin/auth';
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  Delete,
+  Param,
+} from '@nestjs/common';
 
 import { IdDto } from 'src/shares/dtos/param.dto';
 import { Notification } from './schemas/notification.schema';
@@ -57,10 +64,17 @@ export class NotificationController {
     );
   }
 
-  @Post('/read_all')
+  @Post('/read-all')
   @ApiBearerAuth()
   @ApiOperation({ summary: '[Notification] Read all notifications' })
   async markAllNotificationsAsRead(@UserID() user_id: string): Promise<void> {
     return this.notificationService.readAll(user_id);
+  }
+
+  @Delete('/delete/:id')
+  @ApiOperation({ summary: '[Payment] Delete notification by _id' })
+  @ApiBearerAuth()
+  async deleteWallet(@Param('id') walletId: string): Promise<void> {
+    await this.notificationService.deleteNotificationById(walletId);
   }
 }

@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsMongoId } from 'class-validator';
+import { IsOptional, IsString, IsNumber } from 'class-validator';
 
-export class GetNoteDto {
-  @ApiProperty({ required: true })
-  @IsMongoId()
+import { PaginationDto } from 'src/shares/dtos/pagination.dto';
+
+export class GetFriendDto extends PaginationDto {
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
-  readonly user_id: string;
+  readonly name?: string;
 }

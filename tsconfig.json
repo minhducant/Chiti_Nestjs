@@ -39,7 +39,7 @@
     "resolveJsonModule": true,
     "types": [
       "node",
-      "Multer"
+      // "Multer"
     ],
     "paths": {}
   }

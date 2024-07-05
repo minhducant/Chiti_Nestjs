@@ -66,7 +66,7 @@ export class DebtController {
     await this.debtService.deleteDebt(id);
   }
 
-  @Patch('/change_status')
+  @Patch('/change-status')
   @ApiBearerAuth()
   @ApiOperation({
     summary: '[Debt] Change status debt',

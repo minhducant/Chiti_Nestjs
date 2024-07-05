@@ -56,11 +56,12 @@ export class NotificationService {
   ) {
     try {
       const { notification_token } = payload;
-      let existingNotificationToken = await this.notificationTokenModel.findOneAndUpdate(
-        { user_id, notification_token },
-        { user_id, notification_token, device_type: '', status: 'ACTIVE' },
-        { upsert: true, new: true },
-      );
+      let existingNotificationToken =
+        await this.notificationTokenModel.findOneAndUpdate(
+          { user_id, notification_token },
+          { user_id, notification_token, device_type: '', status: 'ACTIVE' },
+          { upsert: true, new: true },
+        );
       await this.notificationTokenModel.deleteMany({
         _id: { $ne: existingNotificationToken._id },
         notification_token,
@@ -76,26 +77,6 @@ export class NotificationService {
   async sendNotification(sendNotificationDto: SendNotificationDto) {
     const { user_id, title, body, data } = sendNotificationDto;
     try {
-      const tokens = await this.notificationTokenModel
-        .aggregate([
-          { $match: { user_id: new mongoose.Types.ObjectId(user_id) } },
-          { $project: { notification_token: 1 } },
-        ])
-        .exec();
-      if (!tokens || tokens.length === 0) {
-        throw new Error('No notification tokens found for the user');
-      }
-      const registrationTokens = tokens.map(
-        (token) => token.notification_token,
-      );
-      const message: firebase.messaging.MessagingPayload = {
-        notification: {
-          title: title,
-          body: body,
-        },
-        data: data,
-      };
-      await firebase.messaging().sendToDevice(registrationTokens, message);
       await this.notificationModel.create({
         user_id,
         title,
@@ -103,6 +84,25 @@ export class NotificationService {
         data,
         is_read: false,
       });
+      const tokens = await this.notificationTokenModel
+        .aggregate([
+          { $match: { user_id: new mongoose.Types.ObjectId(user_id) } },
+          { $project: { notification_token: 1 } },
+        ])
+        .exec();
+      if (tokens || tokens.length !== 0) {
+        const registrationTokens = tokens?.map(
+          (token) => token.notification_token,
+        );
+        const message: firebase.messaging.MessagingPayload = {
+          notification: {
+            title: title,
+            body: body,
+          },
+          data: data,
+        };
+        firebase.messaging().sendToDevice(registrationTokens, message);
+      }
     } catch (error) {
       return error;
     }
@@ -131,5 +131,9 @@ export class NotificationService {
     } catch (error) {
       console.error('Error occurred while updating notifications:', error);
     }
+  }
+
+  async deleteNotificationById(notificationId: string): Promise<void> {
+    await this.notificationModel.findByIdAndDelete(notificationId).exec();
   }
 }

@@ -20,7 +20,7 @@ import { UserID } from 'src/shares/decorators/get-user-id.decorator';
 export class InviteController {
   constructor(private inviteService: InviteService) {}
 
-  @Post('/add_member/:id')
+  @Post('/add-member/:id')
   @ApiBearerAuth()
   @ApiOperation({
     summary: '[Invite] Invite member',
@@ -29,7 +29,7 @@ export class InviteController {
     return this.inviteService.addNoteMember(id, userId);
   }
 
-  @Post('/add_friend/:id')
+  @Post('/add-friend/:id')
   @ApiBearerAuth()
   @ApiOperation({
     summary: '[Invite] Invite add friend',

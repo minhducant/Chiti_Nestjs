@@ -7,12 +7,12 @@ export class AddFriendDto {
   @IsMongoId()
   readonly _id: string;
 
-  @ApiProperty({ required: true })
-  @IsString()
-  readonly name: string;
+  // @ApiProperty({ required: false, default: '' })
+  // @IsString()
+  // readonly name: string;
 
-  @ApiProperty({ required: true })
-  @IsOptional()
-  @IsString()
-  readonly image_url: string;
+  // @ApiProperty({ required: true, default: '' })
+  // @IsOptional()
+  // @IsString()
+  // readonly image_url: string;
 }

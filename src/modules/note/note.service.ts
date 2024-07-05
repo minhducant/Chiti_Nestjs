@@ -1,3 +1,4 @@
+import { Cron } from '@nestjs/schedule';
 import mongoose, { Model } from 'mongoose';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Injectable, BadRequestException } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { GetNoteDto } from './dto/get-note.dto';
 import { httpErrors } from 'src/shares/exceptions';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { AddExpenseDto } from './dto/add-expense.dto';
+import { StatusEnum } from 'src/shares/enums/note.enum';
 import { Note, NoteDocument } from './schemas/note.schema';
 import { ResPagingDto } from 'src/shares/dtos/pagination.dto';
 import { User, UserDocument } from '../user/schemas/user.schema';
@@ -223,5 +225,21 @@ export class NoteService {
     await this.noteModel.findByIdAndUpdate(dto._id, {
       note_line: noteAggregate[0].note_line,
     });
+  }
+
+  @Cron('0 0 * * *')
+  async handleScheduledTasks() {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    await this.noteModel.updateMany(
+      {
+        status: StatusEnum.archived,
+        updatedAt: { $lte: thirtyDaysAgo },
+      },
+      { status: StatusEnum.deleted },
+    );
+    console.log(
+      'Scheduled task completed: Updated archived notes older than 30 days.',
+    );
   }
 }
