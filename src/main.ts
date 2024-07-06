@@ -33,7 +33,7 @@ async function bootstrap(): Promise<void> {
   app.use(helmet());
   app.use(compression());
   app.setGlobalPrefix(prefix);
-  app.enableCors({ origin: '*' });
+  app.enableCors();
   app.use(json({ limit: '50mb' }));
   app.useWebSocketAdapter(new IoAdapter(app));
   app.useGlobalPipes(new BodyValidationPipe());

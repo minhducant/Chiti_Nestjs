@@ -63,7 +63,7 @@ export class UserService {
       })
       .select('friend_id');
     const friendUserIds = friends.map((friend) => friend.friend_id);
-    const query: any = {};
+    const query: any = { _id: { $ne: new mongoose.Types.ObjectId(userId) } };
     if (name) {
       if (name.length > 5) {
         query.$or = [

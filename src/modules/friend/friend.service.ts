@@ -88,7 +88,7 @@ export class FriendService {
       { $match: query },
       {
         $lookup: {
-          from: 'users', // Collection name of userModel
+          from: 'users',
           localField: 'friend_id',
           foreignField: '_id',
           as: 'friend',

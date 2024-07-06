@@ -11,18 +11,18 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
 
-  mongodb-testing:
-    container_name: database-mongo-ecommerce-testing
-    image: mongo
-    restart: always
-    ports:
-      - "27016:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+  # mongodb-testing:
+  #   container_name: database-mongo-ecommerce-testing
+  #   image: mongo
+  #   restart: always
+  #   ports:
+  #     - "27016:27017"
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: example
 
-  redis:
-    image: 'redis:6-alpine'
-    container_name: redis-spendsync
-    ports:
-      - 6379:6379
+  # redis:
+  #   image: 'redis:6-alpine'
+  #   container_name: redis-spendsync
+  #   ports:
+  #     - 6379:6379
