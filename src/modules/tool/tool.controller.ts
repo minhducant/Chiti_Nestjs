@@ -1,13 +1,9 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, DefaultValuePipe } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiQuery } from '@nestjs/swagger';
 
+import { VatDto } from './dto/finance.dto';
 import { ToolService } from './tool.service';
-import {
-  VatDto,
-  IncomeTaxDto,
-  LoanRepaymentDto,
-  CompoundInterestDto,
-} from './dto/finance.dto';
+import { GoldPriceQueryDto } from './dto/tool.dto';
 
 @ApiTags('Tool - Công cụ')
 @Controller('tool')
@@ -18,6 +14,12 @@ export class ToolController {
   @ApiOperation({ summary: '[Tool] Calculate VAT' })
   calculateVAT(@Query() query: VatDto) {
     return this.toolService.calculateVAT(query.amount, query.rate);
+  }
+
+  @Get('gold')
+  @ApiOperation({ summary: '[Tool] Get Gold Price' })
+  async goldPrice(@Query() query: GoldPriceQueryDto) {
+    return this.toolService.fetchGoldPrice(query);
   }
 
   @Get('fetch')
@@ -35,32 +37,4 @@ export class ToolController {
   async fetchTaxInfo(@Query('tax_code') tax_code: string) {
     return await this.toolService.fetchTaxInfo(tax_code);
   }
-
-  //   @Get('income-tax')
-  //   @ApiOperation({ summary: 'Calculate Income Tax' })
-  //   calculateIncomeTax(@Query() query: IncomeTaxDto) {
-  //     const brackets = JSON.parse(query.taxBrackets);
-  //     return this.toolService.calculateIncomeTax(query.income, brackets);
-  //   }
-
-  // @Get('loan-repayment')
-  // @ApiOperation({ summary: '[Tool] Calculate Loan Repayment' })
-  // calculateLoanRepayment(@Query() query: LoanRepaymentDto) {
-  //   return this.toolService.calculateLoanRepayment(
-  //     query.principal,
-  //     query.annualRate,
-  //     query.years,
-  //   );
-  // }
-
-  // @Get('compound-interest')
-  // @ApiOperation({ summary: '[Tool] Calculate Compound Interest' })
-  // calculateCompoundInterest(@Query() query: CompoundInterestDto) {
-  //   return this.toolService.calculateCompoundInterest(
-  //     query.principal,
-  //     query.rate,
-  //     query.timesCompounded,
-  //     query.years,
-  //   );
-  // }
 }
