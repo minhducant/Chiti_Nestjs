@@ -34,7 +34,7 @@ export class LoggerMiddleware implements NestMiddleware {
         write: (_logInfo) => {
           const logInfo = JSON.parse(_logInfo);
           if (env != 'develop') {
-            console.log(logInfo);
+            // console.log(logInfo);
           }
         },
       },

@@ -1,7 +1,6 @@
 import mongoose, { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-import { Cache } from 'cache-manager';
-import { caching } from 'cache-manager';
+import { Cache, caching } from 'cache-manager';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable, Inject } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
@@ -28,7 +27,7 @@ export class UserService {
   ) {}
 
   async findById(_id: string): Promise<User> {
-    return this.userModel.findById(_id).select('-password');
+    return this.userModel.findById(_id).lean().exec();
   }
 
   generateUserId(): string {
@@ -197,6 +196,87 @@ export class UserService {
       role: UserRole.user,
       last_login_at: new Date(),
       email,
+      status: UserStatus.ACTIVE,
+      is_verify: true,
+    });
+  }
+
+  async findOrCreateZaloUser(profile: any): Promise<User> {
+    const { name, id, picture } = profile;
+    const user_id = this.generateUserId();
+    const user = await this.userModel.findOne({
+      zalo_id: id,
+    });
+    if (user) {
+      return this.userModel.findByIdAndUpdate(
+        user._id,
+        {
+          last_login_at: new Date(),
+        },
+        { new: true },
+      );
+    }
+    return this.userModel.create({
+      zalo_id: id,
+      name: name,
+      user_id: user_id,
+      image_url: picture.data.url,
+      role: UserRole.user,
+      last_login_at: new Date(),
+      status: UserStatus.ACTIVE,
+      is_verify: true,
+    });
+  }
+
+  async findOrCreateLINEUser(profile: any): Promise<User> {
+    const { displayName, userId, pictureUrl } = profile;
+    const user_id = this.generateUserId();
+    const user = await this.userModel.findOne({
+      line_id: userId,
+    });
+    if (user) {
+      return this.userModel.findByIdAndUpdate(
+        user._id,
+        {
+          last_login_at: new Date(),
+        },
+        { new: true },
+      );
+    }
+    return this.userModel.create({
+      line_id: userId,
+      name: displayName,
+      user_id: user_id,
+      image_url: pictureUrl,
+      role: UserRole.user,
+      last_login_at: new Date(),
+      status: UserStatus.ACTIVE,
+      is_verify: true,
+    });
+  }
+
+  async findOrCreateXUser(profile: any): Promise<User> {
+    const { name, id, profile_image_url_https } = profile;
+    const user_id = this.generateUserId();
+    const user = await this.userModel.findOne({
+      x_id: id,
+    });
+    if (user) {
+      return this.userModel.findByIdAndUpdate(
+        user._id,
+        {
+          last_login_at: new Date(),
+        },
+        { new: true },
+      );
+    }
+    return this.userModel.create({
+      zalo_id: id,
+      name: name,
+      user_id: user_id,
+      image_url: profile_image_url_https,
+      role: UserRole.user,
+      last_login_at: new Date(),
       status: UserStatus.ACTIVE,
       is_verify: true,
     });

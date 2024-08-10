@@ -8,11 +8,15 @@ export const WALLET_MODEL = 'wallet';
 export enum WalletType {
   BANK_CARD = 'BANK_CARD',
   PAYPAL = 'PAYPAL',
+  VISA = 'VISA',
+  MASTER_CARD = 'MASTER_CARD',
+  LINE_PAY = 'LINE_PAY',
+  MOMO = 'MOMO',
 }
 
 @Schema({ timestamps: true, collection: WALLET_MODEL })
 export class Wallet extends Document {
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: USER_MODEL })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: USER_MODEL, index: true })
   user_id: string;
 
   @Prop({ type: String, default: '', required: true })
@@ -40,6 +44,8 @@ export class Wallet extends Document {
 export type WalletDocument = Wallet & Document;
 
 export const WalletSchema = SchemaFactory.createForClass(Wallet);
+
+WalletSchema.index({ user_id: 1, type: 1 });
 
 WalletSchema.pre('save', function (next) {
   const wallet = this as WalletDocument;

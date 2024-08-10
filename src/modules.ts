@@ -11,15 +11,17 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { mongodb } from 'src/configs/database.config';
 import { redisConfig } from 'src/configs/redis.config';
 //Customer Module
-import { NoteModule } from './modules/note/note.module';
+import { NoteModule } from 'src/modules/note/note.module';
 import { UserModule } from 'src/modules/user/user.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { DebtModule } from 'src/modules/debt/debt.module';
+import { ChatModule } from 'src/modules/chat/chat.module';
 import { ToolModule } from 'src/modules/tool/tool.module';
 import { InviteModule } from 'src/modules/invite/invite.module';
-import { UploadModule } from 'src/modules/upload/upload.module';
 import { FriendModule } from 'src/modules/friend/friend.module';
+import { BattlesModule } from 'src/modules/battles/battles.module';
 import { PaymentModule } from 'src/modules/payment/payment.module';
+import { ClusteringModule } from 'src/modules/cluster/cluster.module';
 import { NotificationModule } from 'src/modules/notification/notification.module';
 
 const Modules: any = [
@@ -48,12 +50,14 @@ const Modules: any = [
   AuthModule,
   UserModule,
   FriendModule,
-  // UploadModule,
   InviteModule,
   NoteModule,
+  ChatModule,
   DebtModule,
   PaymentModule,
   NotificationModule,
+  BattlesModule,
   ToolModule,
+  ClusteringModule,
 ];
 export default Modules;

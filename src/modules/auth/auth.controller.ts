@@ -30,28 +30,44 @@ export class AuthController {
     return this.userService.findById(userId);
   }
 
-  @Post('login-apple')
-  @ApiOperation({ summary: '[Auth] Login with Apple' })
-  async logInApple(
-    @Body() loginInstagramDto: LoginGoogleDto,
-  ): Promise<ResponseLogin> {
-    return this.authService.logInGoogle(loginInstagramDto);
+  // @Post('login-x')
+  // @ApiOperation({ summary: '[Auth] Login with X' })
+  // async logInX(@Body() loginDto: LoginGoogleDto): Promise<ResponseLogin> {
+  //   return this.authService.logInX(loginDto);
+  // }
+
+  @Post('login-zalo')
+  @ApiOperation({ summary: '[Auth] Login with Zalo' })
+  async logInZalo(@Body() loginDto: LoginGoogleDto): Promise<ResponseLogin> {
+    return this.authService.logInZalo(loginDto);
   }
+
+  @Post('login-line')
+  @ApiOperation({ summary: '[Auth] Login with LINE' })
+  async logInLINE(@Body() loginDto: LoginGoogleDto): Promise<ResponseLogin> {
+    return this.authService.logInLINE(loginDto);
+  }
+
+  // @Post('login-apple')
+  // @ApiOperation({ summary: '[Auth] Login with Apple' })
+  // async logInApple(
+  //   @Body() loginInstagramDto: LoginGoogleDto,
+  // ): Promise<ResponseLogin> {
+  //   return this.authService.logInGoogle(loginInstagramDto);
+  // }
 
   @Post('login-google')
   @ApiOperation({ summary: '[Auth] Login with Google' })
-  async logInGoogle(
-    @Body() loginInstagramDto: LoginGoogleDto,
-  ): Promise<ResponseLogin> {
-    return this.authService.logInGoogle(loginInstagramDto);
+  async logInGoogle(@Body() loginDto: LoginGoogleDto): Promise<ResponseLogin> {
+    return this.authService.logInGoogle(loginDto);
   }
 
   @Post('login-facebook')
   @ApiOperation({ summary: '[Auth] Login with Facebook' })
   async loginFacebook(
-    @Body() loginFacebookDto: LoginFacebookDto,
+    @Body() loginDto: LoginFacebookDto,
   ): Promise<ResponseLogin> {
-    return this.authService.loginFacebook(loginFacebookDto);
+    return this.authService.loginFacebook(loginDto);
   }
 
   @Post('refresh-access-token')

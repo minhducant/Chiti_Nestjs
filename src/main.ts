@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
+import { join } from 'path';
 import * as config from 'config';
 import * as helmet from 'helmet';
 import * as Sentry from '@sentry/node';
@@ -17,42 +18,40 @@ import { HttpExceptionFilter } from 'src/shares/filters/http-exception.filter';
 import { SentryInterceptor } from 'src/shares/interceptors/sentry.interceptor';
 import { ResponseTransformInterceptor } from 'src/shares/interceptors/response.interceptor';
 
-const appPort = config.get<number>('app.port');
-const prefix = config.get<string>('app.prefix');
-const appEnv = config.get<string>('app.node_env');
-const dnsSentry = config.get<string>('sentry_dns');
+const { name, port, prefix, node_env, sentry_dns } = config.get<any>('app');
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModules, {
     cors: true,
   });
   Sentry.init({
-    dsn: dnsSentry,
-    environment: appEnv,
+    dsn: sentry_dns,
+    environment: node_env,
   });
+  app.enableCors({});
   app.use(helmet());
   app.use(compression());
   app.setGlobalPrefix(prefix);
-  app.enableCors();
   app.use(json({ limit: '50mb' }));
   app.useWebSocketAdapter(new IoAdapter(app));
   app.useGlobalPipes(new BodyValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new SentryInterceptor());
   app.enableVersioning({ type: VersioningType.URI });
+  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.useStaticAssets(join(__dirname, '..', 'public'));
   app.use(urlencoded({ extended: true, limit: '50mb' }));
   app.useGlobalInterceptors(new ResponseTransformInterceptor());
-  const appName = config.get<string>('app.name');
   const options = new DocumentBuilder()
     .addBearerAuth()
-    .setTitle(appName)
+    .setTitle(name)
     .setVersion('0.0.1')
-    .setDescription(`${appName} description`)
+    .setDescription(`${name} description`)
     .setExternalDoc('Postman Collection', `/${prefix}/docs-json`)
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup(`${prefix}/docs`, app, document, {
-    customSiteTitle: appName,
+    customSiteTitle: name,
     swaggerOptions: {
       filter: true,
       deepLinking: true,
@@ -62,7 +61,7 @@ async function bootstrap(): Promise<void> {
       defaultModelsExpandDepth: -1,
     },
   });
-  await app.listen(appPort).then(async () => {
+  await app.listen(port).then(async () => {
     const logger = app.get(Logger);
     logger.debug(
       `Application is running on: ${await app.getUrl()}/${prefix}/docs/#/`,

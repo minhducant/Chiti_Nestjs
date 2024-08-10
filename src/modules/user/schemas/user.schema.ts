@@ -25,11 +25,11 @@ export class User {
   @Prop({ type: String })
   name: string;
 
-  @Prop({ type: String })
+  @Prop({ type: String, unique: true })
   user_id: string;
 
-  @Prop({ required: false, type: [{ type: FriendSchema }] })
-  friends: Friend[];
+  // @Prop({ required: false, type: [{ type: FriendSchema }] })
+  // friends: Friend[];
 
   @Prop({ type: String })
   full_name: string;
@@ -57,6 +57,33 @@ export class User {
 
   @Prop({ type: String })
   google_id: string;
+
+  @Prop({ type: String })
+  zalo_id: string;
+
+  @Prop({ type: String })
+  apple_id: string;
+
+  @Prop({ type: String })
+  line_id: string;
+
+  @Prop({ type: String })
+  kakao_id: string;
+
+  @Prop({ type: String })
+  x_id: string;
+
+  @Prop({ type: String })
+  twitter_id: string;
+
+  @Prop({ type: String })
+  whatsapp_id: string;
+
+  @Prop({ type: String })
+  wechat_id: string;
+
+  @Prop({ type: String })
+  snapchat_id: string;
 
   @Prop({ type: Date })
   last_login_at: Date;

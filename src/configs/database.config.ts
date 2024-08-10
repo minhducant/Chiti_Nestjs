@@ -12,7 +12,7 @@ export interface DatabaseConfig {
 export const mongodb = {
   uri: getConfig().get<string>('mongodb.uri'),
   options: {
-    directConnection: true,
+    // directConnection: true,
     connectionFactory: (connection: any) => {
       connection.plugin(addedPaginate);
       connection.plugin(mongooseAggregatePaginateV2);

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
+import moment from 'moment';
 import * as https from 'https';
-import { parseStringPromise } from 'xml2js';
 
-import { GoldPriceQueryDto } from './dto/tool.dto';
+import { KQSXQueryDto, ExchangeRateQueryDto } from './dto/tool.dto';
 
 @Injectable()
 export class ToolService {
@@ -15,6 +15,7 @@ export class ToolService {
         keepAlive: true,
         maxSockets: 10,
         maxFreeSockets: 10,
+        rejectUnauthorized: false,
       }),
       headers: {
         'Accept-Encoding': 'gzip, deflate, br',
@@ -46,42 +47,88 @@ export class ToolService {
     return amount * (rate / 100);
   }
 
-  async fetchGoldPrice(query: GoldPriceQueryDto) {
+  async fetchGoldPrice() {
+    const url =
+      'https://baomoi.com/_next/data/UuBIbljihp4FG_xF2nO1O/utilities/gold/sjc.json';
     try {
-      if (query.agency === 'btmt') {
-        const url = `http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v`;
-        const response = await axios.get(url);
-        return response?.data?.DataList?.Data;
-      }
-      if (query.agency === 'doji') {
-        const url = `http://giavang.doji.vn/api/giavang/?api_key=258fbd2a72ce8481089d88c678e9fe4f`;
-        const response = await axios.get(url);
-        const xmlData = response?.data;
-        const jsonData = await parseStringPromise(xmlData, {
-          explicitArray: false,
-          mergeAttrs: true,
-        });
-        return jsonData;
-      }
-      if (query.agency === 'sjc') {
-        const url = `https://sjc.com.vn/xml/tygiavang.xml`;
-        const response = await axios.get(url);
-        const xmlData = response?.data;
-        const jsonData = await parseStringPromise(xmlData, {
-          explicitArray: false,
-          mergeAttrs: true,
-        });
-        return jsonData;
-      }
-      if (query.agency === 'mi_hong') {
-        const url = `https://www.mihong.vn/api/v1/gold/prices/current`;
-        const response = await axios.get(url);
-        return response?.data?.data;
-      } else {
-        return [];
-      }
+      const response = await this.axiosInstance.get(url);
+      return response?.data?.pageProps?.resp?.data?.content?.boards;
     } catch (error) {
       return { error: error.message };
     }
+  }
+
+  async fetchPetroleumPrice() {
+    const url =
+      'https://baomoi.com/_next/data/UuBIbljihp4FG_xF2nO1O/utilities/petroleum.json';
+    try {
+      const response = await this.axiosInstance.get(url);
+      return response?.data?.pageProps?.resp?.data?.content;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  async fetchKQSX(query: KQSXQueryDto) {
+    const baseUrl =
+      'https://baomoi.com/_next/data/UuBIbljihp4FG_xF2nO1O/utilities/lottery';
+    const { type, province, date, type_vietlott } = query;
+    let url = baseUrl;
+    if (type === 'kqsx') {
+      if (province) {
+        url += `/${province}.json`;
+        if (date) url += `?date=${date}&slug=${province}`;
+        else url += `?slug=${province}`;
+      }
+    } else if (type_vietlott) {
+      url += `/vietlott/${type_vietlott}.json`;
+      if (date) url += `?date=${date}&slug=${type_vietlott}`;
+      else url += `?slug=${type_vietlott}`;
+    }
+    try {
+      const response = await this.axiosInstance.get(url);
+      return response?.data?.pageProps?.resp?.data?.content;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  async fetchExchangeRate(query: ExchangeRateQueryDto) {
+    const url = `https://baomoi.com/_next/data/UuBIbljihp4FG_xF2nO1O/utilities/exchange-rate/${query.bank}.json?shortName=${query.bank}`;
+    try {
+      const response = await this.axiosInstance.get(url);
+      return response?.data?.pageProps?.resp?.data?.content;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  async LogTelegram(message: string) {
+    const chatId = '-1002146975231';
+    const telegramBotToken = '6380191156:AAEevp_arLDk874xSYfrfjymCZsXee5xEwo';
+    try {
+      const response = await axios.post(
+        `https://api.telegram.org/bot${telegramBotToken}/sendMessage?chat_id=${chatId}&text=${message}`,
+      );
+      return response;
+    } catch (error) {
+      console.error('Error sending log message to Telegram:', error);
+    }
+  }
+
+  async sendPaymentNotificationMessage(payment: any) {
+    const Format3Dot = (currency: number) => {
+      return currency.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+    };
+    let message = `🔊 +${Format3Dot(payment?.amount || 0)} ${payment.content}`;
+    message += `\r\n💰 Số tiền: ${Format3Dot(payment?.amount || 0)}`;
+    message += `\r\n📇 Nội dung: ${payment?.content}`;
+    message += `\r\n💳 Tài khoản: ${payment.account_receiver} (${payment.gate})`;
+    message += `\r\n📅 Thời gian: ${moment(payment?.date).format(
+      'HH:mm DD/MM/YYYY',
+    )}`;
+    message += `\r\n🗃 Transaction id: ${payment?.transaction_id}`;
+    message += `\r\n---`;
+    await this.LogTelegram(message);
   }
 }

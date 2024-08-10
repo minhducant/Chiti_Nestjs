@@ -7,6 +7,7 @@ import { PaymentService } from './payment.service';
 import { NoteModule } from '../note/note.module';
 import { PaymentController } from './payment.controller';
 import { UserModule } from 'src/modules/user/user.module';
+import { ToolModule } from 'src/modules/tool/tool.module';
 import { Note, NoteSchema } from '../note/schemas/note.schema';
 import { User, UserSchema } from '../user/schemas/user.schema';
 import { Wallet, WalletSchema } from './schemas/wallet.schema';
@@ -14,6 +15,7 @@ import { VnBank, VnBankSchema } from './schemas/vn-bank.schema';
 
 @Module({
   imports: [
+    ToolModule,
     UserModule,
     NoteModule,
     MongooseModule.forFeature([

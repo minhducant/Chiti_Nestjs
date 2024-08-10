@@ -22,11 +22,6 @@ export class GetWalletDto extends PaginationDto {
 }
 
 export class AddWalletDto {
-  @ApiProperty({ required: true, default: '' })
-  @IsOptional()
-  @IsMongoId()
-  readonly user_id: string;
-
   @ApiProperty({ required: true, default: 'Do Minh Duc' })
   @IsString()
   readonly name: string;
@@ -79,10 +74,10 @@ export class UpdateWalletDto {
   @IsMongoId()
   readonly _id: string;
 
-  @ApiProperty({ required: true, default: '' })
-  @IsOptional()
-  @IsMongoId()
-  readonly user_id: string;
+  // @ApiProperty({ required: true, default: '' })
+  // @IsOptional()
+  // @IsMongoId()
+  // readonly user_id: string;
 
   @ApiProperty({ required: true, default: 'Do Minh Duc' })
   @IsString()

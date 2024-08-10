@@ -6,7 +6,7 @@ export class VnBank {
   @Prop({ required: false })
   id: number;
 
-  @Prop({ required: false })
+  @Prop({ required: false, index: true })
   name: string;
 
   @Prop({ required: false })
@@ -15,7 +15,7 @@ export class VnBank {
   @Prop({ required: false })
   bin: string;
 
-  @Prop({ required: false })
+  @Prop({ required: false, index: true })
   shortName: string;
 
   @Prop()
@@ -27,7 +27,7 @@ export class VnBank {
   @Prop({ required: false })
   lookupSupported: number;
 
-  @Prop({ required: false })
+  @Prop({ required: false, index: true })
   short_name: string;
 
   @Prop({ required: false })

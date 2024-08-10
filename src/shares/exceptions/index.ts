@@ -161,7 +161,6 @@ export const httpErrors = {
     code: 'ORDER_00004',
   },
 
-
   //NOTE
   NOTE_NOT_FOUND: {
     message: 'Note not found.',
@@ -184,6 +183,12 @@ export const httpErrors = {
   GOOGLE_TOKEN_INVALID_OR_EXPIRES: {
     message: 'Access token is invalid or expires.',
     code: 'GOOGLE_00000',
+  },
+
+  // ZALO
+  ZALO_TOKEN_INVALID_OR_EXPIRES: {
+    message: 'Access token is invalid or expires.',
+    code: 'ZALO_00000',
   },
 
   // CATEGORY

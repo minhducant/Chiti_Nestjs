@@ -29,6 +29,7 @@ import { PayloadRefreshTokenDto } from './dto/payload-refresh-token.dto';
 import { ResponseRefreshTokenDto } from './dto/response-refresh-token.dto';
 import { PayloadAccessTokenDto } from 'src/shares/dtos/payload-access-token.dto';
 
+const baseZaloUrl = config.get<string>('zalo.base_api');
 const baseGoogleUrl = config.get<string>('google.base_api');
 const baseFacebookUrl = config.get<string>('facebook.graph_api');
 
@@ -179,5 +180,143 @@ export class AuthService {
       iat: Date.now(),
       exp: Date.now() + JWT_CONSTANTS.userAccessTokenExpiry,
     };
+  }
+
+  async logInZalo(loginDto: LoginGoogleDto): Promise<any> {
+    const { accessToken } = loginDto;
+    const url = `${baseZaloUrl}me?fields=id,name,picture`;
+    const userData = await lastValueFrom(
+      this.httpService
+        .get(url, {
+          headers: {
+            access_token: accessToken,
+          },
+        })
+        .pipe(
+          map((response) => {
+            return response.data || null;
+          }),
+        )
+        .pipe(
+          catchError((error) => {
+            throw new BadRequestException(error.message);
+          }),
+        ),
+    );
+    if (userData.error === 452) {
+      throw new BadRequestException(httpErrors.ZALO_TOKEN_INVALID_OR_EXPIRES);
+    }
+    const user = await this.userService.findOrCreateZaloUser(userData);
+    const [accessToken_, refreshToken] = await Promise.all([
+      this.generateUserAccessToken(user['_id']),
+      this.generateUserRefreshToken(user['_id']),
+    ]);
+    return {
+      accessToken: accessToken_,
+      refreshToken,
+      iat: Date.now(),
+      exp: Date.now() + JWT_CONSTANTS.userAccessTokenExpiry,
+    };
+  }
+
+  async logInApple(loginDto: LoginGoogleDto): Promise<any> {
+    const { accessToken } = loginDto;
+  }
+
+  async logInLINE(loginDto: LoginGoogleDto): Promise<any> {
+    const { accessToken } = loginDto;
+    const url = 'https://api.line.me/v2/profile';
+    const userData = await lastValueFrom(
+      this.httpService
+        .get(url, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .pipe(
+          map((response) => {
+            return response.data || null;
+          }),
+        )
+        .pipe(
+          catchError((error) => {
+            throw new BadRequestException(error.message);
+          }),
+        ),
+    );
+    if (!userData) {
+      throw new BadRequestException(httpErrors.ZALO_TOKEN_INVALID_OR_EXPIRES);
+    }
+    const user = await this.userService.findOrCreateLINEUser(userData);
+    const [accessToken_, refreshToken] = await Promise.all([
+      this.generateUserAccessToken(user['_id']),
+      this.generateUserRefreshToken(user['_id']),
+    ]);
+    return {
+      accessToken: accessToken_,
+      refreshToken,
+      iat: Date.now(),
+      exp: Date.now() + JWT_CONSTANTS.userAccessTokenExpiry,
+    };
+  }
+
+  async logInX(loginDto: LoginGoogleDto): Promise<any> {
+    const { accessToken } = loginDto;
+    const url = "https://api.twitter.com/2/me";
+    const userData = await lastValueFrom(
+      this.httpService
+        .get(url, {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .pipe(
+          map((response) => {
+            return response.data || null;
+          }),
+        )
+        .pipe(
+          catchError((error) => {
+            console.log(error);
+            throw new BadRequestException(error.message);
+          }),
+        ),
+    );
+    console.log(userData)
+    // if (userData.error === 452) {
+    //   throw new BadRequestException(httpErrors.ZALO_TOKEN_INVALID_OR_EXPIRES);
+    // }
+    // const user = await this.userService.findOrCreateZaloUser(userData);
+    // const [accessToken_, refreshToken] = await Promise.all([
+    //   this.generateUserAccessToken(user['_id']),
+    //   this.generateUserRefreshToken(user['_id']),
+    // ]);
+    // return {
+    //   accessToken: accessToken_,
+    //   refreshToken,
+    //   iat: Date.now(),
+    //   exp: Date.now() + JWT_CONSTANTS.userAccessTokenExpiry,
+    // };
+  }
+
+  async logInKakaoTalk(loginDto: LoginGoogleDto): Promise<any> {
+    const { accessToken } = loginDto;
+    const url = `https://kapi.kakao.com/v1/api/talk/profile`;
+  }
+
+  async logInWhatsApp(loginDto: LoginGoogleDto): Promise<any> {
+    const { accessToken } = loginDto;
+  }
+
+  async logInWeChat(loginDto: LoginGoogleDto): Promise<any> {
+    const { accessToken } = loginDto;
+  }
+
+  async logInSnapchat(loginDto: LoginGoogleDto): Promise<any> {
+    const { accessToken } = loginDto;
+  }
+
+  async logInTwitter(loginDto: LoginGoogleDto): Promise<any> {
+    const { accessToken } = loginDto;
   }
 }

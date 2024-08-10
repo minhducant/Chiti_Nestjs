@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsNumber } from 'class-validator';
+import { IsOptional, IsString, IsEnum } from 'class-validator';
 
+import { StatusEnum } from 'src/shares/enums/note.enum';
 import { PaginationDto } from 'src/shares/dtos/pagination.dto';
 
 export class GetNoteDto extends PaginationDto {
@@ -9,8 +10,8 @@ export class GetNoteDto extends PaginationDto {
   @IsString()
   readonly title?: string;
 
-  @ApiProperty({ required: false, type: Number})
+  @ApiProperty({ required: false, enum: StatusEnum })
   @IsOptional()
-  @IsNumber()
-  readonly status?: Number;
+  @IsEnum(StatusEnum)
+  status: StatusEnum;
 }

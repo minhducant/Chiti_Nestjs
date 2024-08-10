@@ -49,6 +49,9 @@ mongodb:
 facebook:
   graph_api: FACEBOOK_GRAPH_API
 
+zalo:
+  base_api: ZALO_BASE_API
+
 google:
   base_api: GOOGLE_BASE_API
 

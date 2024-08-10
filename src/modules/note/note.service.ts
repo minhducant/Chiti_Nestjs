@@ -1,8 +1,8 @@
 import { Cron } from '@nestjs/schedule';
 import mongoose, { Model } from 'mongoose';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel, InjectConnection } from '@nestjs/mongoose';
+import { Injectable, BadRequestException } from '@nestjs/common';
 
 import {
   ChangeStatus,
@@ -227,6 +227,30 @@ export class NoteService {
     });
   }
 
+  async createBulkNotes(
+    payload: CreateNoteDto,
+    create_by: string,
+  ): Promise<void> {
+    const NUM_RECORDS = 5000000;
+    const BATCH_SIZE = 1000;
+    if (!payload) {
+      throw new BadRequestException('Payload cannot be empty');
+    }
+    const batches = Math.ceil(NUM_RECORDS / BATCH_SIZE);
+    for (let i = 0; i < batches; i++) {
+      const batch = Array.from({ length: BATCH_SIZE }).map(() => ({
+        ...payload,
+        status: Math.floor(Math.random() * 8),
+        _id: new mongoose.Types.ObjectId(),
+      }));
+      try {
+        await this.noteModel.insertMany(batch, { ordered: false });
+      } catch (error) {
+        console.error(`Error inserting batch ${i + 1}:`, error);
+      }
+    }
+  }
+
   @Cron('0 0 * * *')
   async handleScheduledTasks() {
     const thirtyDaysAgo = new Date();
@@ -237,9 +261,6 @@ export class NoteService {
         updatedAt: { $lte: thirtyDaysAgo },
       },
       { status: StatusEnum.deleted },
-    );
-    console.log(
-      'Scheduled task completed: Updated archived notes older than 30 days.',
     );
   }
 }

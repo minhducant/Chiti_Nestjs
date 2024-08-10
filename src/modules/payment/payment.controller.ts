@@ -1,5 +1,6 @@
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
+  Res,
   Get,
   Post,
   Put,
@@ -13,6 +14,7 @@ import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 
 import { Wallet } from './schemas/wallet.schema';
 import { PaymentService } from './payment.service';
+import { GeneratePaypalQRCodeDto } from './dto/paypal.dto';
 import { GetPaymentDto } from './dto/get-payments.dto';
 import { GetBankListDto } from './dto/get-bank-list.dto';
 import { ResPagingDto } from 'src/shares/dtos/pagination.dto';
@@ -59,14 +61,17 @@ export class PaymentController {
     @Body() body: AddWalletDto,
     @UserID() userId: string,
   ): Promise<void> {
-    await this.paymentService.addWallet(body);
+    await this.paymentService.addWallet(body, userId);
   }
 
   @Put('/wallet/update')
   @ApiOperation({ summary: '[Payment] Update Wallet to Database' })
   @ApiBearerAuth()
-  async updateWallet(@Body() updateWalletDto: UpdateWalletDto): Promise<void> {
-    await this.paymentService.updateWallet(updateWalletDto);
+  async updateWallet(
+    @Body() updateWalletDto: UpdateWalletDto,
+    @UserID() userId: string,
+  ): Promise<void> {
+    await this.paymentService.updateWallet(updateWalletDto, userId);
   }
 
   @Delete('/wallet/delete/:id')
@@ -83,6 +88,17 @@ export class PaymentController {
     return this.paymentService.lookupAccount(lookupAccount);
   }
 
+  @Post('/vn/generate-link')
+  @ApiOperation({ summary: '[Payment] Generate Quick Link for Bank Transfer' })
+  @ApiBearerAuth()
+  async generateQuickLink(
+    @Body() generateQRCodeDto: GenerateQRCodeDto,
+  ): Promise<{ qrCodeUrl: string }> {
+    const qrCodeUrl =
+      await this.paymentService.generateQuickLink(generateQRCodeDto);
+    return { qrCodeUrl };
+  }
+
   @Post('/vn/generate-qrcode')
   @ApiOperation({ summary: '[Payment] Generate QR Code for Bank Transfer' })
   @ApiBearerAuth()
@@ -94,14 +110,15 @@ export class PaymentController {
     return { qrCodeUrl };
   }
 
-  @Post('/vn/generate-quicklink')
-  @ApiOperation({ summary: '[Payment] Generate Quick Link for Bank Transfer' })
-  @ApiBearerAuth()
-  async generateQuickLink(
-    @Body() generateQRCodeDto: GenerateQRCodeDto,
-  ): Promise<{ qrCodeUrl: string }> {
-    const qrCodeUrl =
-      await this.paymentService.generateQuickLink(generateQRCodeDto);
-    return { qrCodeUrl };
-  }
+  // @Post('/paypal/generate-qrcode')
+  // @ApiOperation({
+  //   summary: '[Payment] Generate Paypal QR for Monney Transfer',
+  // })
+  // @ApiBearerAuth()
+  // async createOrder(@Body() generatePaypalQRCodeDto: GeneratePaypalQRCodeDto) {
+  //   const data = await this.paymentService.createOrderPayPal(
+  //     generatePaypalQRCodeDto,
+  //   );
+  //   return data;
+  // }
 }

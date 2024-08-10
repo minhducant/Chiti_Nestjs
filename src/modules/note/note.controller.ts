@@ -67,6 +67,18 @@ export class NoteController {
     await this.noteService.createNote(body, userId);
   }
 
+  @Post('/create/many')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: '[Note] Create 5 million notes',
+  })
+  async createBulkNotes(
+    @Body() body: CreateNoteDto,
+    @UserID() userId: string,
+  ): Promise<void> {
+    await this.noteService.createBulkNotes(body, userId);
+  }
+
   @Get('split/:id')
   @ApiBearerAuth()
   @ApiOperation({

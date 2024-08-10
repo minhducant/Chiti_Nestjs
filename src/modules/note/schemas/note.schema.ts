@@ -14,7 +14,7 @@ export const NOTE_MODEL = 'note';
 
 @Schema({ _id: false })
 export class Member {
-  @Prop({ required: false, index: true })
+  @Prop({ required: false, type: String })
   _id: string;
 
   @Prop({ required: true, type: String })
@@ -41,8 +41,8 @@ export const memberSchema = SchemaFactory.createForClass(Member);
 export class NoteLine {
   @Prop({
     required: false,
-    index: true,
-    unique: true,
+    // index: true,
+    // unique: true,
     auto: true,
     type: MongooseSchema.Types.ObjectId,
   })
@@ -51,7 +51,7 @@ export class NoteLine {
   @Prop({
     required: true,
     type: Object,
-    index: true,
+    // index: true,
     ref: USER_MODEL,
   })
   buyer: {
@@ -89,17 +89,21 @@ export class NoteLine {
 
 export const noteLineSchema = SchemaFactory.createForClass(NoteLine);
 
-@Schema({ timestamps: true, collection: NOTE_MODEL })
+@Schema({ timestamps: true, collection: NOTE_MODEL, autoIndex: true })
 export class Note {
   @Prop({
     required: false,
     type: MongooseSchema.Types.ObjectId,
-    index: true,
+    // index: true,
     ref: USER_MODEL,
   })
   user_id: MongooseSchema.Types.ObjectId;
 
-  @Prop({ required: true, type: String })
+  @Prop({
+    required: true,
+    type: String,
+    //  index: true
+  })
   title: string;
 
   @Prop({ required: false, type: String })
