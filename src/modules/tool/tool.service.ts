@@ -39,7 +39,7 @@ export class ToolService {
       const response = await axios.get(url);
       return response?.data;
     } catch (error) {
-      return { error: error.message };
+      return { error: error };
     }
   }
 
@@ -60,7 +60,7 @@ export class ToolService {
 
   async fetchPetroleumPrice() {
     const url =
-      'https://baomoi.com/_next/data/UuBIbljihp4FG_xF2nO1O/utilities/petroleum.json';
+      'https://baomoi.com/_next/data/Pf59wGH4NJFwOfczrEIsO/utilities/petroleum.json';
     try {
       const response = await this.axiosInstance.get(url);
       return response?.data?.pageProps?.resp?.data?.content;

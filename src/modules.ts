@@ -21,7 +21,6 @@ import { InviteModule } from 'src/modules/invite/invite.module';
 import { FriendModule } from 'src/modules/friend/friend.module';
 import { BattlesModule } from 'src/modules/battles/battles.module';
 import { PaymentModule } from 'src/modules/payment/payment.module';
-import { ClusteringModule } from 'src/modules/cluster/cluster.module';
 import { NotificationModule } from 'src/modules/notification/notification.module';
 
 const Modules: any = [
@@ -58,6 +57,5 @@ const Modules: any = [
   NotificationModule,
   BattlesModule,
   ToolModule,
-  ClusteringModule,
 ];
 export default Modules;
