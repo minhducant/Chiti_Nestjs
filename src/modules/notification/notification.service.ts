@@ -101,7 +101,7 @@ export class NotificationService {
           },
           data: data,
         };
-        firebase.messaging().sendToDevice(registrationTokens, message);
+        // firebase.messaging().sendToDevice(registrationTokens, message);
       }
     } catch (error) {
       return error;

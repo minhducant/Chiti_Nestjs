@@ -31,6 +31,7 @@ async function bootstrap(): Promise<void> {
   app.enableCors({});
   app.use(helmet());
   app.use(compression());
+  app.enableShutdownHooks();
   app.setGlobalPrefix(prefix);
   app.use(json({ limit: '50mb' }));
   app.useWebSocketAdapter(new IoAdapter(app));
@@ -52,6 +53,7 @@ async function bootstrap(): Promise<void> {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup(`${prefix}/docs`, app, document, {
     customSiteTitle: name,
+    swaggerUiEnabled: true,
     swaggerOptions: {
       filter: true,
       deepLinking: true,

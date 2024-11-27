@@ -55,7 +55,7 @@ const Modules: any = [
   DebtModule,
   PaymentModule,
   NotificationModule,
-  BattlesModule,
+  // BattlesModule,
   ToolModule,
 ];
 export default Modules;
