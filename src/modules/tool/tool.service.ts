@@ -49,7 +49,7 @@ export class ToolService {
 
   async fetchGoldPrice() {
     const url =
-      'https://baomoi.com/_next/data/UuBIbljihp4FG_xF2nO1O/utilities/gold/sjc.json';
+      'https://baomoi.com/_next/data/uZbPKprv4IEKetyH91lar/utilities/gold/sjc.json';
     try {
       const response = await this.axiosInstance.get(url);
       return response?.data?.pageProps?.resp?.data?.content?.boards;
@@ -60,7 +60,7 @@ export class ToolService {
 
   async fetchPetroleumPrice() {
     const url =
-      'https://baomoi.com/_next/data/Pf59wGH4NJFwOfczrEIsO/utilities/petroleum.json';
+      'https://baomoi.com/_next/data/uZbPKprv4IEKetyH91lar/utilities/petroleum.json';
     try {
       const response = await this.axiosInstance.get(url);
       return response?.data?.pageProps?.resp?.data?.content;
@@ -71,7 +71,7 @@ export class ToolService {
 
   async fetchKQSX(query: KQSXQueryDto) {
     const baseUrl =
-      'https://baomoi.com/_next/data/UuBIbljihp4FG_xF2nO1O/utilities/lottery';
+      'https://baomoi.com/_next/data/uZbPKprv4IEKetyH91lar/utilities/lottery';
     const { type, province, date, type_vietlott } = query;
     let url = baseUrl;
     if (type === 'kqsx') {
@@ -94,7 +94,7 @@ export class ToolService {
   }
 
   async fetchExchangeRate(query: ExchangeRateQueryDto) {
-    const url = `https://baomoi.com/_next/data/UuBIbljihp4FG_xF2nO1O/utilities/exchange-rate/${query.bank}.json?shortName=${query.bank}`;
+    const url = `https://baomoi.com/_next/data/uZbPKprv4IEKetyH91lar/utilities/exchange-rate/${query.bank}.json?shortName=${query.bank}`;
     try {
       const response = await this.axiosInstance.get(url);
       return response?.data?.pageProps?.resp?.data?.content;
